@@ -831,11 +831,11 @@ class ConsoleOutput:
         self._manager = manager
 
     def print(self, message: str):
-        stamp = datetime.now().strftime("%c")
+        stamp = datetime.now().strftime("%X")
         if '\n' in message:
             message = message.replace('\n', f"\n{stamp}: ")
         self._text.config(state="normal")
-        self._text.insert("end", f"L{stamp}: {message}\n")
+        self._text.insert("end", f"{stamp}: {message}\n")
         self._text.see("end")  # scroll to the newly added line
         self._text.config(state="disabled")
         if self._manager._twitch.settings.stdlog:
@@ -2424,12 +2424,12 @@ class GUIManager:
         0.05s gives similar performance and CPU usage.
         Not ideal, but the simplest way to avoid threads, thread safety,
         loop.call_soon_threadsafe, futures and all of that.
-
+        
         Uses TKINTER_DONT_WAIT to prevent Tcl/Tk from hanging inside native
         system calls (e.g. X11/Wayland input contexts) during heavy UI redraws.
         """
         do_one_event = self._root.dooneevent
-        # TKINTER_DONT_WAIT (1 << 1) tells Tcl to return immediately
+        # TKINTER_DONT_WAIT (1 << 1) tells Tcl to return immediately 
         # if no events are ready in the queue.
         DONT_WAIT = 1 << 1
 

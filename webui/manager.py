@@ -226,7 +226,7 @@ class WebUIManager:
         """Append a timestamped line to the in-browser console log.
         Matches gui.py ConsoleOutput.print(): each line of a multiline message gets its own stamp.
         """
-        stamp = datetime.now().strftime("%c")
+        stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         lines = [f"{stamp}: {line}" for line in message.split("\n")]
 
         self.main_panel.push_console(lines)
