@@ -320,58 +320,58 @@ jobs:
           name: Twitch.Drops.Miner.Linux.AppImage-${{matrix.arch}}
           path: Twitch.Drops.Miner.Linux.AppImage-${{matrix.arch}}.zip
 
-  linux-pyinstaller-musl-tkinter:
-    name: PyInstaller-tkinter (${{matrix.arch}})
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: x86_64
-            platform: amd64
-            runner: ubuntu-24.04
-          - arch: aarch64
-            platform: arm64
-            runner: ubuntu-24.04-arm
-    runs-on: ${{matrix.runner}}
-    needs:
-      - validate
-      - test
+  # linux-pyinstaller-musl-tkinter:
+  #   name: PyInstaller-tkinter (${{matrix.arch}})
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - arch: x86_64
+  #           platform: amd64
+  #           runner: ubuntu-24.04
+  #         - arch: aarch64
+  #           platform: arm64
+  #           runner: ubuntu-24.04-arm
+  #   runs-on: ${{matrix.runner}}
+  #   needs:
+  #     - validate
+  #     - test
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v7
 
-      - name: Set up variables
-        id: vars
-        run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> "${GITHUB_OUTPUT}"
+  #     - name: Set up variables
+  #       id: vars
+  #       run: |
+  #         echo "sha_short=$(git rev-parse --short HEAD)" >> "${GITHUB_OUTPUT}"
 
-      - name: Append git revision to project version
-        run: |
-          sed -ri "s/^__version__\s*=\s*\"[^\"]+/\0.${{steps.vars.outputs.sha_short}}/" version.py
+  #     - name: Append git revision to project version
+  #       run: |
+  #         sed -ri "s/^__version__\s*=\s*\"[^\"]+/\0.${{steps.vars.outputs.sha_short}}/" version.py
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v4
 
-      - name: Build tkinter version
-        run: |
-          docker build -f Dockerfile.alpine --platform linux/${{matrix.platform}} --build-arg ARCH=${{matrix.arch}} --build-arg UI_BACKEND=tkinter -t twitch-drops-miner-tkinter:${{matrix.arch}} .
+  #     - name: Build tkinter version
+  #       run: |
+  #         docker build -f Dockerfile.alpine --platform linux/${{matrix.platform}} --build-arg ARCH=${{matrix.arch}} --build-arg UI_BACKEND=tkinter -t twitch-drops-miner-tkinter:${{matrix.arch}} .
 
-      - name: Extract tkinter build artifacts
-        run: |
-          docker create --name extract-tkinter twitch-drops-miner-tkinter:${{matrix.arch}}
-          docker cp extract-tkinter:/app/Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}.zip .
-          docker rm extract-tkinter
+  #     - name: Extract tkinter build artifacts
+  #       run: |
+  #         docker create --name extract-tkinter twitch-drops-miner-tkinter:${{matrix.arch}}
+  #         docker cp extract-tkinter:/app/Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}.zip .
+  #         docker rm extract-tkinter
 
-      - name: Upload tkinter build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          if-no-files-found: error
-          name: Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}
-          path: Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}.zip
+  #     - name: Upload tkinter build artifact
+  #       uses: actions/upload-artifact@v7
+  #       with:
+  #         if-no-files-found: error
+  #         name: Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}
+  #         path: Twitch.Drops.Miner.Linux.musl.PyInstaller-tkinter-${{matrix.arch}}.zip
 
   linux-pyinstaller-musl-nicegui:
     name: PyInstaller-nicegui (${{matrix.arch}})
@@ -434,7 +434,7 @@ jobs:
       # - linux-pyinstaller
       # - linux-appimage
       # - macos
-      - linux-pyinstaller-musl-tkinter
+      # - linux-pyinstaller-musl-tkinter
       - linux-pyinstaller-musl-nicegui
     runs-on: ubuntu-latest
     permissions:
